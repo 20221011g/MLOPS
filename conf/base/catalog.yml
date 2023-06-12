@@ -1,49 +1,49 @@
-# Here you can define all your data sets by using simple YAML syntax.
-#
-# Documentation for this file format can be found in "The Data Catalog"
-# Link: https://docs.kedro.org/en/stable/data/data_catalog.html
+# Train and test datasets
+raw_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/housing_data.csv
+  
+cleaned_data:
+  type: pandas.PickleDataSet
+  filepath: data/02_intermediate/cleaned_data.pkl
 
+describe_to_dict:
+  type: pickle.PickleDataSet
+  filepath: data/02_intermediate/describe_to_dict.pkl
 
-# Here you can define all your data sets by using simple YAML syntax.
-#
-# Documentation for this file format can be found in "The Data Catalog"
-# Link: https://kedro.readthedocs.io/en/stable/data/data_catalog.html
-#
-# We support interacting with a variety of data stores including local file systems, cloud, network and HDFS
-#
-# An example data set definition can look as follows:
-#
-#bikes:
-#  type: pandas.CSVDataSet
-#  filepath: "data/01_raw/bikes.csv"
-#
-#weather:
-#  type: spark.SparkDataSet
-#  filepath: s3a://your_bucket/data/01_raw/weather*
-#  file_format: csv
-#  credentials: dev_s3
-#  load_args:
-#    header: True
-#    inferSchema: True
-#  save_args:
-#    sep: '|'
-#    header: True
-#
-#scooters:
-#  type: pandas.SQLTableDataSet
-#  credentials: scooters_credentials
-#  table_name: scooters
-#  load_args:
-#    index_col: ['name']
-#    columns: ['name', 'gear']
-#  save_args:
-#    if_exists: 'replace'
-#    # if_exists: 'fail'
-#    # if_exists: 'append'
-#
-# The Data Catalog supports being able to reference the same file using two different DataSet implementations
-# (transcoding), templating and a way to reuse arguments that are frequently repeated. See more here:
-# https://kedro.readthedocs.io/en/stable/data/data_catalog.html
-#
-# This is a data set used by the "Hello World" example pipeline provided with the project
-# template. Please feel free to remove it once you remove the example pipeline.
+describe_to_dict_verified:
+  type: pickle.PickleDataSet
+  filepath: data/02_intermediate/describe_to_dict_verified.pkl
+
+# Parameters
+params:
+  type: kedro.config.ConfigLoader
+  filepath:
+    - conf/base/parameters.yml
+
+# Models
+linear_model:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/linear_model.pkl
+
+decision_tree_model:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/decision_tree_model.pkl
+
+# Plots
+linear_model_plot:
+  type: matplotlib.MatplotlibWriter
+  filepath: data/07_visualizations/linear_model_plot.png
+
+decision_tree_model_plot:
+  type: matplotlib.MatplotlibWriter
+  filepath: data/07_visualizations/decision_tree_model_plot.png
+
+# Predictions
+linear_model_predictions:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/linear_model_predictions.csv
+
+decision_tree_model_predictions:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/decision_tree_model_predictions.csv
