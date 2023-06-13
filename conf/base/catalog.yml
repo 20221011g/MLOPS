@@ -1,19 +1,37 @@
 # Train and test datasets
+X_train_data:
+  type: pandas.CSVDataSet
+  filepath: data/05_model_input/X_train_data.csv
+
+X_test_data:
+  type: pandas.CSVDataSet
+  filepath: data/05_model_input/X_test_data.csv
+
+y_train_data:
+  type: pandas.CSVDataSet
+  filepath: data/05_model_input/y_train_data.csv
+
+y_test_data:
+  type: pandas.CSVDataSet
+  filepath: data/05_model_input/y_test_data.csv
+
+
+# engineered datasets
 raw_data:
   type: pandas.CSVDataSet
   filepath: data/01_raw/housing_data.csv
   
 cleaned_data:
   type: pandas.PickleDataSet
-  filepath: data/02_intermediate/cleaned_data.pkl
+  filepath: data/02_intermediate/cleaned_data.csv
 
 describe_to_dict:
   type: pickle.PickleDataSet
-  filepath: data/02_intermediate/describe_to_dict.pkl
+  filepath: data/02_intermediate/describe_to_dict.json
 
 describe_to_dict_verified:
   type: pickle.PickleDataSet
-  filepath: data/02_intermediate/describe_to_dict_verified.pkl
+  filepath: data/02_intermediate/describe_to_dict_verified.json
 
 # Parameters
 params:
@@ -23,12 +41,12 @@ params:
 
 # Models
 linear_model:
-  type: pickle.PickleDataSet
-  filepath: data/06_models/linear_model.pkl
+  type: kedro.io.JoblibDataSet
+  filepath: data/06_models/linear_model.joblib
 
 decision_tree_model:
-  type: pickle.PickleDataSet
-  filepath: data/06_models/decision_tree_model.pkl
+  type: kedro.io.JoblibDataSet
+  filepath: data/06_models/decision_tree_model.joblib
 
 # Plots
 linear_model_plot:
@@ -42,8 +60,8 @@ decision_tree_model_plot:
 # Predictions
 linear_model_predictions:
   type: pandas.CSVDataSet
-  filepath: data/03_primary/linear_model_predictions.csv
+  filepath: data/05_model_output/linear_model_predictions.csv
 
 decision_tree_model_predictions:
   type: pandas.CSVDataSet
-  filepath: data/03_primary/decision_tree_model_predictions.csv
+  filepath: data/05_model_output/decision_tree_model_predictions.csv
