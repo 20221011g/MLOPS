@@ -13,7 +13,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func= split_data,
-                inputs=["bank_data_engineered","parameters"],
+                inputs=["housing_data_engineered","parameters"],
                 outputs= ["X_train_data","X_test_data","y_train_data","y_test_data"],
                 name="split",
             ),
