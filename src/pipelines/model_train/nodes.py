@@ -28,6 +28,7 @@ def linear_model_train(X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.
 
     mlflow.set_tag("mlflow.runName", parameters["run_name"])
     #mlflow.autolog(log_model_signatures=True, log_input_examples=True)
+    mlflow.sklearn.log_model(model, "model")
 
     model = LinearRegression()
     model.fit(X_train_temp, y_train)

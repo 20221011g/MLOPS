@@ -51,6 +51,6 @@ def house_price_drift(data_reference: pd.DataFrame, data_analysis: pd.DataFrame)
         reference_data=data_reference[["house_price"]],
         column_mapping=None
     )
-    data_drift_report.save_html("data/08_reporting/house_price_drift_report.html")
+    data_drift_report.save_html("data/reporting/house_price_drift_report.html")
 
     return results
