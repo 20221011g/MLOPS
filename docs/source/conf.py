@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-# project_template documentation build
+# mlops documentation build
 # configuration file, created by sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its
@@ -21,11 +21,11 @@ import re
 
 from kedro.framework.cli.utils import find_stylesheets
 
-from project_template import __version__ as release
+from mlops import __version__ as release
 
 # -- Project information -----------------------------------------------------
 
-project = "project_template"
+project = "mlops"
 author = "Kedro"
 
 # The short X.Y version.
@@ -119,7 +119,7 @@ html_show_sourcelink = False
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "project_templatedoc"
+htmlhelp_basename = "mlopsdoc"
 
 # -- Options for LaTeX output ------------------------------------------------
 
@@ -147,8 +147,8 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "project_template.tex",
-        "project_template Documentation",
+        "mlops.tex",
+        "mlops Documentation",
         "Kedro",
         "manual",
     )
@@ -161,8 +161,8 @@ latex_documents = [
 man_pages = [
     (
         master_doc,
-        "project_template",
-        "project_template Documentation",
+        "mlops",
+        "mlops Documentation",
         [author],
         1,
     )
@@ -176,11 +176,11 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        "project_template",
-        "project_template Documentation",
+        "mlops",
+        "mlops Documentation",
         author,
-        "project_template",
-        "Project project_template codebase.",
+        "mlops",
+        "Project mlops codebase.",
         "Data-Science",
     )
 ]

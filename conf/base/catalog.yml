@@ -1,67 +1,13 @@
-# Train and test datasets
-X_train_data:
+# Here you can define all your data sets by using simple YAML syntax.
+#
+# Documentation for this file format can be found in "The Data Catalog"
+# Link: https://docs.kedro.org/en/stable/data/data_catalog.html
+
+housing_raw_data:
   type: pandas.CSVDataSet
-  filepath: data/05_model_input/X_train_data.csv
+  filepath: data/01_raw/housing.csv
 
-X_test_data:
+housing_processed_data:
   type: pandas.CSVDataSet
-  filepath: data/05_model_input/X_test_data.csv
+  filepath: data/02_intermediate/housing_processed.csv
 
-y_train_data:
-  type: pandas.CSVDataSet
-  filepath: data/05_model_input/y_train_data.csv
-
-y_test_data:
-  type: pandas.CSVDataSet
-  filepath: data/05_model_input/y_test_data.csv
-
-
-# engineered datasets
-raw_data:
-  type: pandas.CSVDataSet
-  filepath: data/01_raw/housing_data.csv
-  
-cleaned_data:
-  type: pandas.PickleDataSet
-  filepath: data/02_intermediate/cleaned_data.csv
-
-describe_to_dict:
-  type: pickle.PickleDataSet
-  filepath: data/02_intermediate/describe_to_dict.json
-
-describe_to_dict_verified:
-  type: pickle.PickleDataSet
-  filepath: data/02_intermediate/describe_to_dict_verified.json
-
-# Parameters
-params:
-  type: kedro.config.ConfigLoader
-  filepath:
-    - conf/base/parameters.yml
-
-# Models
-linear_model:
-  type: kedro.io.JoblibDataSet
-  filepath: data/06_models/linear_model.joblib
-
-decision_tree_model:
-  type: kedro.io.JoblibDataSet
-  filepath: data/06_models/decision_tree_model.joblib
-
-# Plots
-linear_model_plot:
-  type: matplotlib.MatplotlibWriter
-  filepath: data/07_visualizations/linear_model_plot.png
-
-decision_tree_model_plot:
-  type: matplotlib.MatplotlibWriter
-  filepath: data/07_visualizations/decision_tree_model_plot.png
-
-# Predictions
-linear_model_predictions:
-  type: pandas.CSVDataSet
-  filepath: data/05_model_output/linear_model_predictions.csv
-
-decision_tree_model_predictions:
-  type: pandas.CSVDataSet
-  filepath: data/05_model_output/decision_tree_model_predictions.csv

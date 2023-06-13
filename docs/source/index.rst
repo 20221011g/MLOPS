@@ -1,8 +1,8 @@
-.. project_template documentation master file, created by sphinx-quickstart.
+.. mlops documentation master file, created by sphinx-quickstart.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to project project_template's API docs!
+Welcome to project mlops's API docs!
 =============================================
 
 .. toctree::
