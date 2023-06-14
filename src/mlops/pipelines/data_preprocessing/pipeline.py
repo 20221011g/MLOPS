@@ -13,15 +13,15 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=clean_data,
-                inputs="bank_raw_data",
-                outputs=["bank_cleaned_data","raw_describe","cleaned_describe"],
+                inputs="housing_raw_data",
+                outputs=["housing_cleaned_data","raw_describe","cleaned_describe"],
                 name="clean",
             ),
 
             node(
                 func= feature_engineer,
-                inputs="bank_cleaned_data",
-                outputs= "bank_data_engineered",
+                inputs="housing_cleaned_data",
+                outputs= "housing_data_engineered",
                 name="engineering",
             ),
 

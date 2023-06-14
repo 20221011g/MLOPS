@@ -11,3 +11,35 @@ housing_processed_data:
   type: pandas.CSVDataSet
   filepath: data/02_intermediate/housing_processed.csv
 
+# Train and test datasets
+X_train:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/X_train.csv
+
+X_test:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/X_test.csv
+
+y_train:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/y_train.csv
+
+y_test:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/y_test.csv
+
+# Parameters
+params:linear_regression:
+  type: kedro.config.ConfigLoader
+  filepath:
+    - conf/base/linear_regression.yml
+
+params:decision_tree:
+  type: kedro.config.ConfigLoader
+  filepath:
+    - conf/base/decision_tree.yml
+
+params:best_cols:
+  type: kedro.config.ConfigLoader
+  filepath:
+    - conf/base/best_cols.yml
