@@ -46,6 +46,8 @@ def clean_data(
 
     return df_transformed, describe_to_dict, describe_to_dict_verified
 
+def feature_engineer(data: pd.DataFrame) -> pd.DataFrame:
+    return data
 
 def remove_outliers(data, col, val):
     for index, value in data[col].items():

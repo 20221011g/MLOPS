@@ -3,8 +3,10 @@ from pandas import DataFrame
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 import numpy as np
+from typing import Any
 
-def predict_linear_model(model: LinearRegression, X_test: DataFrame, parameters: Dict[str, Any], best_cols):
+def predict_linear_model(model: LinearRegression, X_test: DataFrame, 
+    parameters: Dict[str, Any], best_cols):
     if  parameters["with_feature_selection"] == False:
         X_test_temp = X_test.copy()
     else:

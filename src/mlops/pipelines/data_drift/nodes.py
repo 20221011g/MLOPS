@@ -23,7 +23,7 @@ import nannyml as nml
 from evidently.report import Report
 from evidently.metric_preset import DataDriftPreset
 
-def house_price_drift(data_reference: pd.DataFrame, data_analysis: pd.DataFrame):
+def data_drift(data_reference: pd.DataFrame, data_analysis: pd.DataFrame):
     # Define the threshold for the test
     constant_threshold = nml.thresholds.ConstantThreshold(lower=0.3, upper=0.7)
     constant_threshold.thresholds(data_reference)

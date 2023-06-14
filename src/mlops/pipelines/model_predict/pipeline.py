@@ -1,8 +1,10 @@
 from kedro.pipeline import Pipeline, node
 from .nodes import predict_linear_model, predict_decision_tree_model
+from src.mlops.pipelines.data_preprocessing.nodes import clean_data, feature_engineer
+from src.mlops.pipelines.data_split.nodes import split_data
 
-def create_predict_pipeline(**kwargs) -> Pipeline:
-    return pipeline(
+def create_pipeline(**kwargs) -> Pipeline:
+    return Pipeline(
         [
             node(
                 func=clean_data,
@@ -19,10 +21,18 @@ def create_predict_pipeline(**kwargs) -> Pipeline:
             ),
 
             node(
-                func= model_predict,
-                inputs=["test_model","X_test_data","y_test_data","housing_daily_data_engineered","parameters","best_columns"],
+                func=split_data,
+                inputs="housing_daily_data_engineered",
+                outputs=["X_train_data","X_test_data","y_train_data","y_test_data"],
+                name="split",
+            ),
+            
+            node(
+                func= predict_linear_model,
+                inputs=["linear_model", "X_test_data", "parameters", "best_columns"],
                 outputs= "daily_prediction",
                 name="predict",
             ),
+
         ]
     )

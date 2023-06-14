@@ -22,8 +22,7 @@ import mlflow
 
 
 def split_data(
-    data: pd.DataFrame, parameters: Dict[str, Any]
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+    data: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
     """Splits data into features and target training and test sets.
 
     Args:
@@ -34,11 +33,11 @@ def split_data(
     """
 
     assert [col for col in data.columns if data[col].isnull().any()] == []
-    y = data[parameters["target_column"]]
-    X = data.drop(columns=parameters["target_column"], axis=1)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=parameters["test_fraction"], random_state=parameters["random_state"])
-    X_train = data_train.drop(columns=parameters["target_column"])
-    X_test = data_test.drop(columns=parameters["target_column"])
-    y_train = data_train[parameters["target_column"]]
-    y_test = data_test[parameters["target_column"]]
+    y = data["SalePrice"]
+    X = data.drop(columns=["SalePrice"], axis=1)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y)
+    X_train = data_train.drop(columns=["SalePrice"])
+    X_test = data_test.drop(columns=["SalePrice"])
+    y_train = data_train["SalePrice"]
+    y_test = data_test["SalePrice"]
     return X_train, X_test, y_train, y_test
