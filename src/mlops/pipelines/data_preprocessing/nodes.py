@@ -43,7 +43,7 @@ def clean_data(
 
     # Calculate descriptive statistics of the transformed DataFrame
     describe_to_dict_verified = df_transformed.describe().to_dict()
-
+    print(len(df_transformed))
     return df_transformed, describe_to_dict, describe_to_dict_verified
 
 def feature_engineer(data: pd.DataFrame) -> pd.DataFrame:
@@ -55,3 +55,9 @@ def remove_outliers(data, col, val):
             data.drop(index, inplace=True)
     print(len(data))
     return data
+
+
+
+
+
+
