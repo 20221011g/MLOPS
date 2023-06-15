@@ -27,25 +27,25 @@ def clean_data(
     data = data.rename(columns={'SalePrice': 'target'})
 
     # Create a copy of the DataFrame for further cleaning
-    df_transformed = data.copy()
-    describe_to_dict = df_transformed.describe().to_dict()
+    clean_data = data.copy()
+    describe_to_dict = clean_data.describe().to_dict()
 
     # Drop rows with missing values in columns other than 'SalePrice'
-    data.dropna(subset=df_transformed.columns[df_transformed.columns != 'target'], inplace=True)
+    data.dropna(subset=clean_data.columns[clean_data.columns != 'target'], inplace=True)
 
     # Impute missing values in 'target' column using the mean strategy
     imputer = SimpleImputer(strategy='mean')
-    sale_price = df_transformed['target'].values.reshape(-1, 1)
+    sale_price = clean_data['target'].values.reshape(-1, 1)
     imputer.fit(sale_price)
-    df_transformed['target'] = imputer.transform(sale_price)
+    clean_data['target'] = imputer.transform(sale_price)
 
     # Perform one-hot encoding on categorical columns
     cat_cols = ['MSSubClass', 'MSZoning', 'LotConfig', 'BldgType']
-    df_transformed = pd.get_dummies(df_transformed, columns=cat_cols)
+    clean_data = pd.get_dummies(clean_data, columns=cat_cols)
 
     # Calculate descriptive statistics of the transformed DataFrame
-    describe_to_dict_verified = df_transformed.describe().to_dict()
-    print(len(df_transformed))
+    describe_to_dict_verified = clean_data.describe().to_dict()
+    print(len(clean_data))
     return cleaned_data, describe_to_dict, describe_to_dict_verified
 
 
