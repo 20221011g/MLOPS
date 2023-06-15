@@ -105,5 +105,10 @@ def feature_engineer(
     return data_engineered, describe_to_dict_verified
 
 
-
+def remove_outliers(data, col, val):
+    for index, value in data[col].items():
+        if value > val:
+            data.drop(index, inplace=True)
+    print(len(data))
+    return data
 
