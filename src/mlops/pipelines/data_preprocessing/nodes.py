@@ -27,36 +27,36 @@ def clean_data(
     data = data.rename(columns={'SalePrice': 'target'})
 
     # Create a copy of the DataFrame for further cleaning
-    clean_data = data.copy()
-    describe_to_dict = clean_data.describe().to_dict()
+    cleaned_data = data.copy()
+    describe_to_dict = cleaned_data.describe().to_dict()
 
     # Drop rows with missing values in columns other than 'SalePrice'
-    data.dropna(subset=clean_data.columns[clean_data.columns != 'target'], inplace=True)
+    data.dropna(subset=cleaned_data.columns[cleaned_data.columns != 'target'], inplace=True)
 
     # Impute missing values in 'target' column using the mean strategy
     imputer = SimpleImputer(strategy='mean')
-    sale_price = clean_data['target'].values.reshape(-1, 1)
+    sale_price = cleaned_data['target'].values.reshape(-1, 1)
     imputer.fit(sale_price)
-    clean_data['target'] = imputer.transform(sale_price)
+    cleaned_data['target'] = imputer.transform(sale_price)
 
     # Perform one-hot encoding on categorical columns
     cat_cols = ['MSSubClass', 'MSZoning', 'LotConfig', 'BldgType']
-    clean_data = pd.get_dummies(clean_data, columns=cat_cols)
+    cleaned_data = pd.get_dummies(cleaned_data, columns=cat_cols)
 
     # Calculate descriptive statistics of the transformed DataFrame
-    describe_to_dict_verified = clean_data.describe().to_dict()
-    print(len(clean_data))
+    describe_to_dict_verified = cleaned_data.describe().to_dict()
+    print(len(cleaned_data))
     return cleaned_data, describe_to_dict, describe_to_dict_verified
 
 
 def feature_engineer(
         cleaned_data: pd.DataFrame,
 ) -> Tuple[pd.DataFrame, Dict]:
-    """Does some data cleaning.
+    """Does sfeature engineering and selection.
     Args:
-        data: Data containing features and target.
+        cleaned_data: Data containing features and target.
     Returns:
-        data: Data after feature
+        data_engineered: Data after feature engineering
     """
     # Turn 'BsmtFinSF2' into a binary feature
     cleaned_data['BsmtFinSF2'] = (cleaned_data['BsmtFinSF2'] > 0).astype(int)
