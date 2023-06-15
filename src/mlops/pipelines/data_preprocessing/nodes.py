@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from typing import Tuple, Dict
 from sklearn.impute import SimpleImputer
+from sklearn.feature_selection import mutual_info_regression
+from sklearn.feature_selection import VarianceThreshold
 
 
 def clean_data(
@@ -44,19 +46,63 @@ def clean_data(
     # Calculate descriptive statistics of the transformed DataFrame
     describe_to_dict_verified = df_transformed.describe().to_dict()
     print(len(df_transformed))
-    return df_transformed, describe_to_dict, describe_to_dict_verified
-
-def feature_engineer(data: pd.DataFrame) -> pd.DataFrame:
-    return data
-
-def remove_outliers(data, col, val):
-    for index, value in data[col].items():
-        if value > val:
-            data.drop(index, inplace=True)
-    print(len(data))
-    return data
+    return cleaned_data, describe_to_dict, describe_to_dict_verified
 
 
+def feature_engineer(
+        cleaned_data: pd.DataFrame,
+) -> Tuple[pd.DataFrame, Dict]:
+    """Does some data cleaning.
+    Args:
+        data: Data containing features and target.
+    Returns:
+        data: Data after feature
+    """
+    # Turn 'BsmtFinSF2' into a binary feature
+    cleaned_data['BsmtFinSF2'] = (cleaned_data['BsmtFinSF2'] > 0).astype(int)
+
+    # Drop rows with NaN values
+    cleaned_data.dropna(inplace=True)
+
+    # Drop target from dataset
+    cleaned_data_no_target = cleaned_data.drop(labels=['target'], axis=1)
+
+    # create features and target
+    X = cleaned_data_no_target
+    y = cleaned_data['target']
+
+    # convert to categorical data by converting data to integers
+    X = X.astype(int)
+
+    # Compute the mutual information between each feature and the target variable
+    mi_scores = mutual_info_regression(X, y)
+
+    # Create a dictionary to store feature scores
+    feature_scores = dict(zip(X.columns, mi_scores))
+
+    # Filter features with scores greater than 0
+    best_info_columns = [feature for feature, score in feature_scores.items() if score > 0]
+
+    # Make dataframe with the best columns
+    X = X[best_info_columns]
+
+    # using sklearn variancethreshold to find nearly-constant features
+    sel = VarianceThreshold(threshold=0.01)
+    sel.fit(X)  # fit finds the features with very small variance
+
+    # Get the indices of included features
+    best_columns = X.columns[sel.get_support()]
+
+    # Transform X to include only the selected features
+    X = sel.transform(X)
+
+    # Convert X back to a DataFrame with column names
+    data_engineered = pd.DataFrame(X, columns=best_columns)
+
+    # Calculate descriptive statistics of the transformed DataFrame
+    describe_to_dict_verified = data_engineered.describe().to_dict()
+    print(len(data_engineered))
+    return data_engineered, describe_to_dict_verified
 
 
 
