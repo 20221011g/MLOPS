@@ -38,7 +38,7 @@ def clean_data(
     df_transformed['target'] = imputer.transform(sale_price)
 
     # Perform one-hot encoding on categorical columns
-    cat_cols = ['MSSubClass', 'MSZoning', 'LotConfig', 'BldgType']
+    cat_cols = ['MSSubClass', 'MSZoning', 'LotConfig', 'BldgType', 'Exterior1st']
     df_transformed = pd.get_dummies(df_transformed, columns=cat_cols)
 
     # Calculate descriptive statistics of the transformed DataFrame
@@ -47,6 +47,15 @@ def clean_data(
     return df_transformed, describe_to_dict, describe_to_dict_verified
 
 def feature_engineer(data: pd.DataFrame) -> pd.DataFrame:
+    # delete null columns and rows with null values
+    data = data.dropna(axis=1, how='all')
+    data = data.dropna(axis=0, how='any')
+
+    # Ensure all other columns are of a numeric type, else convert them
+    for col in data.columns:
+        if data[col].dtype not in ['int64', 'float64']:
+            data[col] = pd.to_numeric(data[col], errors='coerce')
+
     return data
 
 def remove_outliers(data, col, val):

@@ -5,41 +5,104 @@
 
 housing_raw_data:
   type: pandas.CSVDataSet
-  filepath: data/01_raw/housing.csv
+  filepath: data/01_raw/housing_raw_data.csv
 
-housing_processed_data:
+raw_describe_daily:
   type: pandas.CSVDataSet
-  filepath: data/02_intermediate/housing_processed.csv
+  filepath: data/02_intermediate/raw_describe.csv
+
+housing_cleaned_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/housing_cleaned_data.csv
+
+
+housing_data_engineered:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/housing_data_engineered.csv
 
 # Train and test datasets
 X_train:
   type: pandas.CSVDataSet
-  filepath: data/03_primary/X_train.csv
+  filepath: data/05_model_input/X_train.csv
 
 X_test:
   type: pandas.CSVDataSet
-  filepath: data/03_primary/X_test.csv
+  filepath: data/05_model_input/X_test.csv
 
 y_train:
   type: pandas.CSVDataSet
-  filepath: data/03_primary/y_train.csv
+  filepath: data/05_model_input/y_train.csv
 
 y_test:
   type: pandas.CSVDataSet
-  filepath: data/03_primary/y_test.csv
+  filepath: data/05_model_input/y_test.csv
 
-# Parameters
-params:linear_regression:
-  type: kedro.config.ConfigLoader
-  filepath:
-    - conf/base/linear_regression.yml
+# Trained linear model
+trained_linear_model:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/trained_linear_model.pkl
 
-params:decision_tree:
-  type: kedro.config.ConfigLoader
-  filepath:
-    - conf/base/decision_tree.yml
+# Linear model plot
+linear_model_plot:
+  type: matplotlib.MatplotlibWriter
+  filepath: data/09_visualizations/linear_model_plot.png
 
-params:best_cols:
-  type: kedro.config.ConfigLoader
-  filepath:
-    - conf/base/best_cols.yml
+# Trained decision tree model
+trained_decision_tree_model:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/trained_decision_tree_model.pkl
+
+# Decision tree model plot
+decision_tree_model_plot:
+  type: matplotlib.MatplotlibWriter
+  filepath: data/07_visualizations/decision_tree_model_plot.png
+
+# prediction
+# Raw data
+housing_daily_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/housing_daily_data.csv
+
+# Cleaned data
+housing_daily_data_cleaned:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/housing_daily_data_cleaned.csv
+
+# Descriptive stats for raw and cleaned data
+raw_describe_daily:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/raw_describe_daily.csv
+
+cleaned_describe_daily:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/cleaned_describe_daily.csv
+
+# Feature engineered data
+housing_daily_data_engineered:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/housing_daily_data_engineered.csv
+
+# Split data
+X_train_pred:
+  type: pandas.CSVDataSet
+  filepath: data/05_model_input/X_train_pred.csv
+
+X_test_pred:
+  type: pandas.CSVDataSet
+  filepath: data/05_model_input/X_test_pred.csv
+
+y_train_pred:
+  type: pandas.CSVDataSet
+  filepath: data/05_model_input/y_train_pred.csv
+
+y_test_pred:
+  type: pandas.CSVDataSet
+  filepath: data/05_model_input/y_test_pred.csv
+
+#...
+
+daily_prediction:
+  type: pandas.CSVDataSet
+  filepath: data/09_daily_prediction/daily_prediction.csv
+
+#...
