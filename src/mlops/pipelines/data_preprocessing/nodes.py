@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 from typing import Tuple, Dict
 from sklearn.impute import SimpleImputer
-from sklearn.feature_selection import mutual_info_regression
-from sklearn.feature_selection import VarianceThreshold
 
 
 def clean_data(
@@ -27,84 +25,38 @@ def clean_data(
     data = data.rename(columns={'SalePrice': 'target'})
 
     # Create a copy of the DataFrame for further cleaning
-    cleaned_data = data.copy()
-    describe_to_dict = cleaned_data.describe().to_dict()
+    df_transformed = data.copy()
+    describe_to_dict = df_transformed.describe().to_dict()
 
     # Drop rows with missing values in columns other than 'SalePrice'
-    data.dropna(subset=cleaned_data.columns[cleaned_data.columns != 'target'], inplace=True)
+    data.dropna(subset=df_transformed.columns[df_transformed.columns != 'target'], inplace=True)
 
     # Impute missing values in 'target' column using the mean strategy
     imputer = SimpleImputer(strategy='mean')
-    sale_price = cleaned_data['target'].values.reshape(-1, 1)
+    sale_price = df_transformed['target'].values.reshape(-1, 1)
     imputer.fit(sale_price)
-    cleaned_data['target'] = imputer.transform(sale_price)
+    df_transformed['target'] = imputer.transform(sale_price)
 
     # Perform one-hot encoding on categorical columns
-    cat_cols = ['MSSubClass', 'MSZoning', 'LotConfig', 'BldgType', 'Exterior1st'
-    cleaned_data = pd.get_dummies(cleaned_data, columns=cat_cols)
-
-
-    # Calculate descriptive statistics of the transformed DataFrame
-    describe_to_dict_verified = cleaned_data.describe().to_dict()
-    print(len(cleaned_data))
-    return cleaned_data, describe_to_dict, describe_to_dict_verified
-
-
-def feature_engineer(
-        cleaned_data: pd.DataFrame,
-) -> Tuple[pd.DataFrame, Dict]:
-    """Does sfeature engineering and selection.
-    Args:
-        cleaned_data: Data containing features and target.
-    Returns:
-        data_engineered: Data after feature engineering
-    """
-    # Turn 'BsmtFinSF2' into a binary feature
-    cleaned_data['BsmtFinSF2'] = (cleaned_data['BsmtFinSF2'] > 0).astype(int)
-
-    # Drop rows with NaN values
-    cleaned_data.dropna(inplace=True)
-
-    # Drop target from dataset
-    cleaned_data_no_target = cleaned_data.drop(labels=['target'], axis=1)
-
-    # create features and target
-    X = cleaned_data_no_target
-    y = cleaned_data['target']
-
-    # convert to categorical data by converting data to integers
-    X = X.astype(int)
-
-    # Compute the mutual information between each feature and the target variable
-    mi_scores = mutual_info_regression(X, y)
-
-    # Create a dictionary to store feature scores
-    feature_scores = dict(zip(X.columns, mi_scores))
-
-    # Filter features with scores greater than 0
-    best_info_columns = [feature for feature, score in feature_scores.items() if score > 0]
-
-    # Make dataframe with the best columns
-    X = X[best_info_columns]
-
-    # using sklearn variancethreshold to find nearly-constant features
-    sel = VarianceThreshold(threshold=0.01)
-    sel.fit(X)  # fit finds the features with very small variance
-
-    # Get the indices of included features
-    best_columns = X.columns[sel.get_support()]
-
-    # Transform X to include only the selected features
-    X = sel.transform(X)
-
-    # Convert X back to a DataFrame with column names
-    data_engineered = pd.DataFrame(X, columns=best_columns)
+    cat_cols = ['MSSubClass', 'MSZoning', 'LotConfig', 'BldgType', 'Exterior1st']
+    df_transformed = pd.get_dummies(df_transformed, columns=cat_cols)
 
     # Calculate descriptive statistics of the transformed DataFrame
-    describe_to_dict_verified = data_engineered.describe().to_dict()
-    print(len(data_engineered))
-    return data_engineered, describe_to_dict_verified
+    describe_to_dict_verified = df_transformed.describe().to_dict()
 
+    return df_transformed, describe_to_dict, describe_to_dict_verified
+
+def feature_engineer(data: pd.DataFrame) -> pd.DataFrame:
+    # delete null columns and rows with null values
+    data = data.dropna(axis=1, how='all')
+    data = data.dropna(axis=0, how='any')
+
+    # Ensure all other columns are of a numeric type, else convert them
+    for col in data.columns:
+        if data[col].dtype not in ['int64', 'float64']:
+            data[col] = pd.to_numeric(data[col], errors='coerce')
+
+    return data
 
 def remove_outliers(data, col, val):
     for index, value in data[col].items():
@@ -112,4 +64,3 @@ def remove_outliers(data, col, val):
             data.drop(index, inplace=True)
     print(len(data))
     return data
-
