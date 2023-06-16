@@ -27,17 +27,15 @@ def split_data(
 
     Args:
         data: Data containing features and target.
-        parameters: Parameters defined in parameters.yml.
     Returns:
         Split data.
     """
 
-    assert [col for col in data.columns if data[col].isnull().any()] == []
-    y = data["SalePrice"]
-    X = data.drop(columns=["SalePrice"], axis=1)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y)
-    X_train = data_train.drop(columns=["SalePrice"])
-    X_test = data_test.drop(columns=["SalePrice"])
-    y_train = data_train["SalePrice"]
-    y_test = data_test["SalePrice"]
+    assert [col for col in data.columns if data[col].isnull().any()] == [], "Data contains null values."
+    y = data["target"]
+    X = data.drop(columns=["target"], axis=1)
+
+    # This line splits your data into train and test sets.
+    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+
     return X_train, X_test, y_train, y_test

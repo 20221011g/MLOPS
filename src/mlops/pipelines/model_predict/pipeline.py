@@ -23,13 +23,13 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=split_data,
                 inputs="housing_daily_data_engineered",
-                outputs=["X_train_data","X_test_data","y_train_data","y_test_data"],
+                outputs=["X_train_pred","X_test_pred","y_train_pred","y_test_pred"],
                 name="split",
             ),
             
             node(
                 func= predict_linear_model,
-                inputs=["linear_model", "X_test_data", "parameters", "best_columns"],
+                inputs=["linear_model", "X_test_pred", "parameters", "params:best_columns"],
                 outputs= "daily_prediction",
                 name="predict",
             ),

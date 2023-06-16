@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
 import shap 
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
@@ -26,12 +27,12 @@ def linear_model_train(X_train: pd.DataFrame, X_test: pd.DataFrame, y_train: pd.
         X_train_temp = X_train[best_cols].copy()
         X_test_temp = X_test[best_cols].copy()
 
-    mlflow.set_tag("mlflow.runName", parameters["run_name"])
-    #mlflow.autolog(log_model_signatures=True, log_input_examples=True)
-    mlflow.sklearn.log_model(model, "model")
 
     model = LinearRegression()
     model.fit(X_train_temp, y_train)
+    mlflow.set_tag("mlflow.runName", parameters["run_name"])
+    #mlflow.autolog(log_model_signatures=True, log_input_examples=True)
+    mlflow.sklearn.log_model(model, "model")
 
     # Create object that can calculate shap values
     explainer = shap.Explainer(model, X_train_temp)

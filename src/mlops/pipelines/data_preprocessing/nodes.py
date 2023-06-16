@@ -40,8 +40,9 @@ def clean_data(
     cleaned_data['target'] = imputer.transform(sale_price)
 
     # Perform one-hot encoding on categorical columns
-    cat_cols = ['MSSubClass', 'MSZoning', 'LotConfig', 'BldgType']
+    cat_cols = ['MSSubClass', 'MSZoning', 'LotConfig', 'BldgType', 'Exterior1st'
     cleaned_data = pd.get_dummies(cleaned_data, columns=cat_cols)
+
 
     # Calculate descriptive statistics of the transformed DataFrame
     describe_to_dict_verified = cleaned_data.describe().to_dict()
