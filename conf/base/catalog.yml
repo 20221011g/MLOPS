@@ -7,6 +7,8 @@ housing_raw_data:
   type: pandas.CSVDataSet
   filepath: data/01_raw/housing_raw_data.csv
 
+
+
 raw_describe_daily:
   type: pandas.CSVDataSet
   filepath: data/02_intermediate/raw_describe.csv
@@ -37,6 +39,12 @@ y_test:
   type: pandas.CSVDataSet
   filepath: data/05_model_input/y_test.csv
 
+# data drift html
+data_drift_report:
+  type: src.html_dataset.HTMLDataSet
+  filepath: data/08_reporting/house_price_drift_report.html
+
+
 # Trained linear model
 trained_linear_model:
   type: pickle.PickleDataSet
@@ -58,10 +66,9 @@ decision_tree_model_plot:
   filepath: data/07_visualizations/decision_tree_model_plot.png
 
 # prediction
-# Raw data
 housing_daily_data:
   type: pandas.CSVDataSet
-  filepath: data/01_raw/housing_daily_data.csv
+  filepath: data/00_daily/housing_daily_data.csv
 
 # Cleaned data
 housing_daily_data_cleaned:
