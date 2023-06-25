@@ -1,7 +1,4 @@
-import pandas as pd
-import numpy as np
-from typing import Tuple, Dict
-from sklearn.impute import SimpleImputer
+
 from sklearn.feature_selection import mutual_info_regression
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.impute import KNNImputer
@@ -9,9 +6,7 @@ import category_encoders as ce
 from sklearn.preprocessing import MinMaxScaler
 
 
-def clean_data(
-        data: pd.DataFrame,
-) -> Tuple[pd.DataFrame, Dict, Dict]:
+def clean_data(data: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Does some data cleaning.
     Args:
         data: Data containing features and target.
@@ -45,8 +40,6 @@ def clean_data(
     #D some more features seleciton
     eliminator = MultiCollinearityEliminator(df=data, target='SalePrice', threshold=0.80)
     data_cleaned = eliminator.autoEliminateMulticollinearity()
-
-
     # Remove outliers based on a specific condition for 'SalePrice'
     data_cleaned = remove_outliers(data_cleaned, 'MSSubClass', 150)
     data_cleaned = remove_outliers(data_cleaned, 'LotFrontage', 200)
@@ -84,42 +77,10 @@ def clean_data(
     return data_cleaned, describe_to_dict, describe_to_dict_verified
 
 
-def feature_engineer(
-        cleaned_data: pd.DataFrame,
-) -> Tuple[pd.DataFrame, Dict]:
-    """Does sfeature engineering and selection.
-    Args:
-        cleaned_data: Data containing features and target.
-    Returns:
-        data_engineered: Data after feature engineering
-    """
-    # Turn 'BsmtFinSF2' into a binary feature
-    cleaned_data['BsmtFinSF2'] = (cleaned_data['BsmtFinSF2'] > 0).astype(int)
-
-    # Drop rows with NaN values
-    cleaned_data.dropna(inplace=True)
-
-    # Drop target from dataset
-    cleaned_data_no_target = cleaned_data.drop(labels=['target'], axis=1)
-
-    # create features and target
-    X = cleaned_data_no_target
-    y = cleaned_data['target']
-
-    # convert to categorical data by converting data to integers
-    X = X.astype(int)
-
-    # Compute the mutual information between each feature and the target variable
-    mi_scores = mutual_info_regression(X, y)
-
-    # Create a dictionary to store feature scores
-    feature_scores = dict(zip(X.columns, mi_scores))
-
-    # Filter features with scores greater than 0
-    best_info_columns = [feature for feature, score in feature_scores.items() if score > 0]
-
-    # Make dataframe with the best columns
-    X = X[best_info_columns]
+def feature_engineer(data: pd.DataFrame) -> pd.DataFrame:
+    # delete null columns and rows with null values
+    data = data.dropna(axis=1, how='all')
+    data = data.dropna(axis=0, how='any')
 
     # using sklearn variancethreshold to find nearly-constant features
     sel = VarianceThreshold(threshold=0.01)
@@ -139,6 +100,12 @@ def feature_engineer(
 
     return data_engineered, describe_to_dict_verified
 
+    # Ensure all other columns are of a numeric type, else convert them
+    for col in data.columns:
+        if data[col].dtype not in ['int64', 'float64']:
+            data[col] = pd.to_numeric(data[col], errors='coerce')
+
+    return data
 
 def remove_outliers(data, col, val):
     for index, value in data[col].items():
@@ -228,3 +195,4 @@ class MultiCollinearityEliminator():
             #Obtaining the list of correlated features
             colCorr = self.createCorrelatedFeaturesList()
         return self.df
+

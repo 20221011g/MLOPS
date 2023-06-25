@@ -1,0 +1,5 @@
+best_cols: []
+with_feature_selection: False
+run_name: "default"
+feature_selection: "rfe"
+model_name: "housing"

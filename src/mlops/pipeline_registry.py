@@ -29,7 +29,8 @@ def register_pipelines() -> Dict[str, Pipeline]:
         "split_data": split_data_stage,
         "train": train_stage,
         #"feature_selection": feature_selection_stage,
-        "predict": predict_stage,
         "drift_test" : drift_test_stage, 
-        "__default__": preprocessing_stage + split_data_stage + train_stage
+        "predict": predict_stage,
+        
+        "__default__": preprocessing_stage + split_data_stage + train_stage + predict_stage + drift_test_stage
     }
