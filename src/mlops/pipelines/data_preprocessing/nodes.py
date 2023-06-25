@@ -6,6 +6,7 @@ from sklearn.feature_selection import mutual_info_regression
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.impute import KNNImputer
 import category_encoders as ce
+from sklearn.preprocessing import MinMaxScaler
 
 
 def clean_data(
@@ -36,13 +37,10 @@ def clean_data(
     data = pd.concat([data.drop(columns=numerical_cols), data_train_imputed], axis=1)
 
     # Substituir os valores nulos pela moda em todas as colunas categóricas
-
     # Loop pelas colunas categóricas
     for column in data.select_dtypes(include='object'):
         mode_value = data[column].mode()[0]  # Calcula a moda da coluna
         data[column].fillna(mode_value, inplace=True)  # Preenche os valores nulos com a moda
-
-
 
     #D some more features seleciton
     eliminator = MultiCollinearityEliminator(df=data, target='SalePrice', threshold=0.80)
@@ -73,6 +71,9 @@ def clean_data(
 
     # Aplying binary encoding to the df
     data_cleaned = binary_encoder.fit_transform(data_cleaned)
+
+    scaler = MinMaxScaler()
+    data[numerical_cols] = scaler.fit_transform(data[numerical_cols])
 
     describe_to_dict = data_cleaned.describe().to_dict()
 
