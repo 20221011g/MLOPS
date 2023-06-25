@@ -1,10 +1,11 @@
+
 from typing import Dict, Any
 import pandas as pd
 from nannyml import UnivariateDriftCalculator, thresholds
 from evidently.report import Report
 from evidently.metric_preset import DataDriftPreset
 from html_dataset import HTMLDataSet
-
+ 
 
 def data_drift(data_reference: pd.DataFrame, data_analysis: pd.DataFrame) -> Dict[str, Any]:
     # Specify the columns to include in the drift analysis
@@ -17,6 +18,7 @@ def data_drift(data_reference: pd.DataFrame, data_analysis: pd.DataFrame) -> Dic
 
     # Define the threshold for the data_analysis
     constant_threshold = thresholds.ConstantThreshold(lower=0.3, upper=0.7)
+
     constant_threshold.thresholds(data_reference)
 
     # Initialize the univariate drift calculator
@@ -38,5 +40,4 @@ def data_drift(data_reference: pd.DataFrame, data_analysis: pd.DataFrame) -> Dic
     data_drift_report = Report(metrics=[DataDriftPreset(cat_stattest='ks', stattest_threshold=0.05)])
     data_drift_report.run(current_data=data_analysis, reference_data=data_reference, column_mapping=None)
 
-    # Return the univariate drift report
-    return univariate_drift_report
+     

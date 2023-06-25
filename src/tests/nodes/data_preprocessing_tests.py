@@ -9,12 +9,16 @@ class TestDataCleaning(unittest.TestCase):
         # Import DataFrame from a CSV file in a directory
         file_path = 'C:/Users/couto/PycharmProjects/MLOPS/data/01_raw/train.csv'
         self.data = pd.read_csv(file_path)
+    def test_clean_data(self):
+        cleaned_data, describe_dict, describe_dict_verified = clean_data(self.data)
+
         self.cleaned_data = None  # Initialize cleaned_data as an instance variable
 
 
     def test_clean_data(self):
         cleaned_data, raw_describe, cleaned_describe = clean_data(self.data)
         self.cleaned_data = cleaned_data  # Assign cleaned_data to the instance variable
+
 
         # Assertions for dropped columns
         self.assertNotIn('Id', cleaned_data.columns)
@@ -36,6 +40,10 @@ class TestDataCleaning(unittest.TestCase):
         self.assertEqual(cleaned_data.shape, expected_encoded_shape)  # Update the expected shape after encoding
 
         # Assertions for describe dictionary
+
+        self.assertIsInstance(describe_dict, dict)
+        self.assertIsInstance(describe_dict_verified, dict)
+
         self.assertIsInstance(raw_describe, dict)
         self.assertIsInstance(cleaned_describe, dict)
 
@@ -53,6 +61,7 @@ class TestFeatureEngineering(unittest.TestCase):
 
         # Assertions for describe dictionary
         self.assertIsInstance(engineered_describe, dict)
+
 
 if __name__ == '__main__':
     unittest.main()
