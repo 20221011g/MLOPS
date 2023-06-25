@@ -6,13 +6,14 @@ generated using Kedro 0.18.8
 import logging
 from typing import Any, Dict, Tuple
 
+import evidently
 import numpy as np
 import pandas as pd
-
+from numba import jit
 
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import OneHotEncoder , LabelEncoder
-import shap 
+import shap
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.ensemble import RandomForestClassifier
@@ -22,7 +23,7 @@ import nannyml as nml
 
 from evidently.report import Report
 from evidently.metric_preset import DataDriftPreset
-
+@jit(nopython=True)
 def data_drift(data_reference: pd.DataFrame, data_analysis: pd.DataFrame):
     # Define the threshold for the test
     constant_threshold = nml.thresholds.ConstantThreshold(lower=0.3, upper=0.7)
@@ -54,3 +55,11 @@ def data_drift(data_reference: pd.DataFrame, data_analysis: pd.DataFrame):
     data_drift_report.save_html("data/reporting/house_price_drift_report.html")
 
     return results
+
+dataset = pd.read_csv("C:/Users/couto/PycharmProjects/MLOPS/data/01_raw/HousePricePrediction.csv")
+
+# Split the dataset into reference and analysis subsets
+reference_data, analysis_data = train_test_split(dataset, test_size=0.2, random_state=42)
+
+# Perform data drift analysis
+results = data_drift(reference_data, analysis_data)
