@@ -25,10 +25,10 @@ def create_pipeline(**kwargs) -> Pipeline:
                 inputs="housing_daily_data_engineered",
                 outputs=["X_train_pred","X_test_pred","y_train_pred","y_test_pred"],
                 name="split",
-            ),
+            ), 
             
             node(
-                func= predict_random_forest_model,
+                func= predict_random_forest_model, 
                 inputs=["trained_random_forest_model", "X_test_pred", "parameters", "params:best_columns"],
                 outputs= "daily_prediction",
                 name="predict",
