@@ -16,3 +16,7 @@ shap
 matplotlib
 mlflow
 evidently
+scikit-learn
+pandas
+nannyml==0.8.6
+numpy==1.22.4
