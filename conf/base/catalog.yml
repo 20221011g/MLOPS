@@ -48,14 +48,22 @@ linear_model_plot:
   filepath: data/09_visualizations/linear_model_plot.png
 
 # Trained decision tree model
-trained_decision_tree_model:
+trained_random_forest_model:
   type: pickle.PickleDataSet
-  filepath: data/06_models/trained_decision_tree_model.pkl
+  filepath: data/06_models/trained_random_forest_model.pkl
 
 # Decision tree model plot
-decision_tree_model_plot:
+random_forest_model_plot:
   type: matplotlib.MatplotlibWriter
-  filepath: data/07_visualizations/decision_tree_model_plot.png
+  filepath: data/07_visualizations/random_forest_model_plot.png
+
+trained_gradient_boosting_model:
+  type: pickle.PickleDataSet
+  filepath: data/05_models/trained_gradient_boosting_model.pkl
+  
+gradient_boosting_model_plot:
+  type: matplotlib.MatplotlibWriter
+  filepath: data/06_reporting/gradient_boosting_model_plot.png
 
 # prediction
 # Raw data

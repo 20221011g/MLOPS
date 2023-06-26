@@ -1,5 +1,5 @@
 from kedro.pipeline import Pipeline, node
-from .nodes import predict_linear_model, predict_decision_tree_model
+from .nodes import predict_linear_model, predict_random_forest_model
 from src.mlops.pipelines.data_preprocessing.nodes import clean_data, feature_engineer
 from src.mlops.pipelines.data_split.nodes import split_data
 
@@ -28,8 +28,8 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             
             node(
-                func= predict_linear_model,
-                inputs=["linear_model", "X_test_pred", "parameters", "params:best_columns"],
+                func= predict_random_forest_model,
+                inputs=["trained_random_forest_model", "X_test_pred", "parameters", "params:best_columns"],
                 outputs= "daily_prediction",
                 name="predict",
             ),
