@@ -5,8 +5,9 @@ from sklearn.impute import KNNImputer
 import category_encoders as ce
 from sklearn.preprocessing import MinMaxScaler
 
-
-def clean_data(data: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def clean_data(
+        data: pd.DataFrame,
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Does some data cleaning.
     Args:
         data: Data containing features and target.
@@ -29,41 +30,29 @@ def clean_data(data: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataF
 
     data_train_imputed = pd.DataFrame(imputer.fit_transform(data[numerical_cols]), columns=numerical_cols)
 
-    data = pd.concat([data.drop(columns=numerical_cols), data_train_imputed], axis=1)
+    if 'SalePrice' in data.columns:
+        # Remove outliers based on a specific condition for 'SalePrice'
+        data = remove_outliers(data, 'SalePrice', 700000)
+        # Rename 'SalePrice' column to 'target'
+        data = data.rename(columns={'SalePrice': 'target'})
 
-    # Substituir os valores nulos pela moda em todas as colunas categóricas
-    # Loop pelas colunas categóricas
-    for column in data.select_dtypes(include='object'):
-        mode_value = data[column].mode()[0]  # Calcula a moda da coluna
-        data[column].fillna(mode_value, inplace=True)  # Preenche os valores nulos com a moda
+    # Remove outliers for other columns
+    data = remove_outliers(data, 'TotalBsmtSF', 5000)
+    data = remove_outliers(data, 'LotArea', 100000)
 
-    #D some more features seleciton
-    eliminator = MultiCollinearityEliminator(df=data, target='SalePrice', threshold=0.80)
-    data_cleaned = eliminator.autoEliminateMulticollinearity()
-    # Remove outliers based on a specific condition for 'SalePrice'
-    data_cleaned = remove_outliers(data_cleaned, 'MSSubClass', 150)
-    data_cleaned = remove_outliers(data_cleaned, 'LotFrontage', 200)
-    data_cleaned = remove_outliers(data_cleaned, 'LotArea', 100000)
-    data_cleaned = remove_outliers(data_cleaned, 'MasVnrArea', 1200)
-    data_cleaned = remove_outliers(data_cleaned, 'BsmtFinSF1', 3000)
-    data_cleaned = remove_outliers(data_cleaned, 'BsmtFinSF2', 1200)
-    data_cleaned = remove_outliers(data_cleaned, 'BsmtUnfSF', 2300)
-    data_cleaned = remove_outliers(data_cleaned, 'TotalBsmtSF', 3000)
-    data_cleaned = remove_outliers(data_cleaned, 'GrLivArea', 4000)
-    data_cleaned = remove_outliers(data_cleaned, 'BsmtFullBath', 2.5)
-    data_cleaned = remove_outliers(data_cleaned, 'BedroomAbvGr', 4.5)
-    data_cleaned = remove_outliers(data_cleaned, 'WoodDeckSF', 800)
-    data_cleaned = remove_outliers(data_cleaned, 'OpenPorchSF', 500)
-    data_cleaned = remove_outliers(data_cleaned, 'EnclosedPorch', 350)
+    # Create a copy of the DataFrame for further cleaning
+    df_transformed = data.copy()
+    describe_to_dict = pd.DataFrame(df_transformed.describe().to_dict())
 
+    # Drop rows with missing values in columns other than 'target'
+    data.dropna(subset=df_transformed.columns[df_transformed.columns != 'target'], inplace=True)
 
-
-
-    # Criando uma instância do BinaryEncoder
-    binary_encoder = ce.BinaryEncoder(cols=categorical_cols)
-
-    # Aplying binary encoding to the df
-    data_cleaned = binary_encoder.fit_transform(data_cleaned)
+    if 'target' in df_transformed.columns:
+        # Impute missing values in 'target' column using the mean strategy
+        imputer = SimpleImputer(strategy='mean')
+        target = df_transformed['target'].values.reshape(-1, 1)
+        imputer.fit(target)
+        df_transformed['target'] = imputer.transform(target)
 
     scaler = MinMaxScaler()
     data[numerical_cols] = scaler.fit_transform(data[numerical_cols])
@@ -71,10 +60,8 @@ def clean_data(data: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataF
     describe_to_dict = data_cleaned.describe().to_dict()
 
     # Calculate descriptive statistics of the transformed DataFrame
-    describe_to_dict_verified = data_cleaned.describe().to_dict()
+    describe_to_dict_verified = pd.DataFrame(df_transformed.describe().to_dict())
 
-    data_cleaned.to_csv('C:/Users/couto/PycharmProjects/MLOPS/data/02_intermediate/cleaned_data.csv', index=False)
-    return data_cleaned, describe_to_dict, describe_to_dict_verified
 
 
 def feature_engineer(data: pd.DataFrame) -> pd.DataFrame:
