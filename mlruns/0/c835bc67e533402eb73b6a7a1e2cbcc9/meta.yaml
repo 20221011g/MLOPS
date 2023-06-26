@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/luca_/Documents/Masters/MLOps/project/MLOps-project/mlruns/0/c835bc67e533402eb73b6a7a1e2cbcc9/artifacts
+end_time: 1687801019094
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: c835bc67e533402eb73b6a7a1e2cbcc9
+run_name: default
+run_uuid: c835bc67e533402eb73b6a7a1e2cbcc9
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1687800965693
+status: 3
+tags: []
+user_id: luca_
